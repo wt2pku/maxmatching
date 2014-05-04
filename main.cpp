@@ -13,7 +13,7 @@
 extern char input_file[];
 /*****************************************************************/
 int main(int argc, char *argv[]) {
-	char defaultFile[100] = "../ff/nVIDIA/1Fp.log";
+	char defaultFile[100] = "./small.dat";
     if (argc==1)  {
 		strcpy(input_file, defaultFile);
 	} else {

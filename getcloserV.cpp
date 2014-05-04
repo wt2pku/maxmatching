@@ -18,10 +18,16 @@ void merge(int low, int mid, int high, vector<vertex*> &a);
 /**********************global variables***********************/
 char input_file[100];
 int Radius = 5000;
+//the vector vertices are to store the vertices in the graph
+vector<vertex*> vertices;
+//the map edges are to sotre the edges in the graph
+std::map<std::pair<int, int>, edge*> edges;
+
 /**********************getcloserV ****************************/
 bool myfunction (vertex* i, vertex* j) {
   return (i->x==j->x && i->y==j->y);
 }
+///////////////////////////////////////////////////////////////////////
 //@Load data from testcases and decide which two vertices has an 
 //@edge between them
 ///////////////////////////////////////////////////////////////////////
@@ -30,7 +36,7 @@ void getcloserV( ) {
 	
 	FILE* fpout;
 	
-	fpout = fopen("outedge.log", "w");
+	fpout = fopen("vertices.log", "w");
 	
 	if ( fopen(input_file, "r") == NULL) {
 		printf("\nError: cannot open input file %s for read!\n", input_file);
@@ -41,8 +47,7 @@ void getcloserV( ) {
 
 	printf("\nLoading input file ... \n");
 	
-	//the vector vertices are to store the vertices in the graph
-	vector<vertex*> vertices;
+	
 	fp = fopen(input_file, "r");
 	
 	int nLines;
@@ -58,30 +63,19 @@ void getcloserV( ) {
 	for(i = 0; i < nLines; i++) {
 		fgets(line, 50, fp);
 		sscanf(line, "%d\t%d", &xx, &yy);
-		int iter;
-		bool found = false;
-		for(iter = 0; iter < vertices.size(); iter++) {
-			if(vertices[iter]->x == xx && vertices[iter]->y == yy) {
-				found = true;
-				break;
-			}
-		}
-		
-		if(found) {
-			continue;
-		}
 		
 		vertex *tmpV = new vertex(xx, yy, i);
 		vertices.push_back(tmpV);
 	}
+	
+	
 	printf("\nFinish Loading input file.\n");
 	printf("\nStart Merge Sort...\n");
 	//sorting the vertices according to the x coordinate
 	merge_sort(0, vertices.size() - 1, vertices);
 	printf("\nFinish Merge Sort.\n");
 	
-	//the map edges are to sotre the edges in the graph
-	std::map<std::pair<int, int>, edge*> edges;
+	
 	
 	int sizeOfVertices = vertices.size();
 	printf("\nStart construct edges...\n");
@@ -94,7 +88,22 @@ void getcloserV( ) {
 			if(vertices[j]->x - leftLine <= Radius) {
 				//and in y-axis is closer than h
 				if(abs(vertices[j]->y - yLine) <= Radius) {
-					edge *tmpE = new edge(leftLine, vertices[j]->x);
+					edge *tmpE = new edge(leftID, vertices[j]->id);
+					//if found a vertices, update vertices[i]'s information
+					vertices[i]->degree++;
+					vertices[i]->neighbors.push_back(vertices[j]);
+					vertices[i]->edgeMatch.push_back(0);
+					vertices[i]->edgeVisit.push_back(0);
+					vertices[i]->edgeUsed.push_back(0);
+					vertices[i]->neighborMap.insert( std::pair<int, int>(j, vertices[i]->neighbors.size() - 1) );
+					//update vertices[j]'s information
+					vertices[j]->degree++;
+					vertices[j]->neighbors.push_back(vertices[i]);
+					vertices[j]->edgeMatch.push_back(0);
+					vertices[j]->edgeVisit.push_back(0);
+					vertices[j]->edgeUsed.push_back(0);
+					vertices[j]->neighborMap.insert( std::pair<int, int>(i,vertices[j]->neighbors.size() - 1) );
+					
 					//insert the edge to the map
 					edges.insert(std::pair<std::pair<int, int>, edge*>(std::pair<int, int>(leftID, vertices[j]->id), tmpE));
 					fprintf(fpout, "edge left endpoint: (%d, %d), right endpoint: (%d, %d)\n", leftLine, yLine, vertices[j]->x, vertices[j]->y);
