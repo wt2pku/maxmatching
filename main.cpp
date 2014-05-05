@@ -7,6 +7,7 @@
 #include<string.h>
 #include "objects.hpp"
 #include "getcloserV.hpp"
+#include "MV.hpp"
 
 /***********************main*******************************************/
 /************************ extern variables ************************/
@@ -22,6 +23,7 @@ int main(int argc, char *argv[]) {
 	
 	//test for getcloser
 	getcloserV();
+	search();
 	
 	return 0;
 }

@@ -4,9 +4,9 @@ INCLUDE =.
 
 CFLAGS =-g -Wall
 
-OO = main.o getcloserV.o
+OO = main.o getcloserV.o MV.o
 
-HH = objects.hpp getcloserV.hpp
+HH = objects.hpp getcloserV.hpp MV.hpp
 
 max-matching: main.o $(OO)   
 
@@ -19,3 +19,6 @@ main.o: main.cpp $(HH)
 getcloserV.o: getcloserV.cpp  $(HH)
 
 	$(CC) -c -g -Wall getcloserV.cpp
+
+MV.o: MV.cpp $(HH)
+	$(CC) -c -g -Wall MV.cpp

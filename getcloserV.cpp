@@ -82,31 +82,38 @@ void getcloserV( ) {
 	for(i = 0; i < sizeOfVertices - 1; i++) {
 		int leftLine = vertices[i]->x;
 		int yLine = vertices[i]->y;
-		int leftID = vertices[i]->id;
+		//int leftID = vertices[i]->id;
 		for( j = i + 1; j < sizeOfVertices; j++) {
 			//if in x-axis is closer than h
 			if(vertices[j]->x - leftLine <= Radius) {
 				//and in y-axis is closer than h
 				if(abs(vertices[j]->y - yLine) <= Radius) {
-					edge *tmpE = new edge(leftID, vertices[j]->id);
+					//edge *tmpE = new edge(vertices[i], vertices[j]);
 					//if found a vertices, update vertices[i]'s information
 					vertices[i]->degree++;
 					vertices[i]->neighbors.push_back(vertices[j]);
-					vertices[i]->edgeMatch.push_back(0);
+					//vertices[i]->edgeMatch.push_back(0);
 					vertices[i]->edgeVisit.push_back(0);
 					vertices[i]->edgeUsed.push_back(0);
-					vertices[i]->neighborMap.insert( std::pair<int, int>(j, vertices[i]->neighbors.size() - 1) );
+					//vertices[i]->neighborMap.insert( std::pair<int, int>(j, vertices[i]->degree - 1) );
+					vertices[i]->neighborMap[vertices[j]->id] = vertices[i]->degree - 1;
+					//printf("i->id = %d, j->id = %d\n", vertices[i]->id, vertices[j]->id);
+					//printf("i->degree = %d\n", vertices[i]->degree);
+					//printf("iInj = %d\n", vertices[i]->neighborMap[vertices[j]->id]);
+					//int iInj = vertices[i]->neighborMap[vertices[j]->id];
+					//printf("%d th neighbor: %d\n", iInj, vertices[i]->neighbors[iInj]->id);
 					//update vertices[j]'s information
 					vertices[j]->degree++;
 					vertices[j]->neighbors.push_back(vertices[i]);
-					vertices[j]->edgeMatch.push_back(0);
+					//vertices[j]->edgeMatch.push_back(0);
 					vertices[j]->edgeVisit.push_back(0);
 					vertices[j]->edgeUsed.push_back(0);
-					vertices[j]->neighborMap.insert( std::pair<int, int>(i,vertices[j]->neighbors.size() - 1) );
-					
+					//vertices[j]->neighborMap.insert( std::pair<int, int>(i,vertices[j]->degree - 1) );
+					vertices[j]->neighborMap[vertices[i]->id] = vertices[j]->degree - 1;
+
 					//insert the edge to the map
-					edges.insert(std::pair<std::pair<int, int>, edge*>(std::pair<int, int>(leftID, vertices[j]->id), tmpE));
-					fprintf(fpout, "edge left endpoint: (%d, %d), right endpoint: (%d, %d)\n", leftLine, yLine, vertices[j]->x, vertices[j]->y);
+					//edges.insert(std::pair<std::pair<int, int>, edge*>(std::pair<int, int>(leftID, vertices[j]->id), tmpE));
+					fprintf(fpout, "edge left endpoint: %d, right endpoint: %d\n", vertices[i]->id, vertices[j]->id);
 				}
 			} else { // if the x-axis is further than h, the sweep line will move
 				break;

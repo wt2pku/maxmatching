@@ -3,9 +3,11 @@
 #include <cstdlib>
 #include <vector>
 #include <deque>
+#include <map>
 
 #define INFTY 2147483647
 
+class blossom;
 class vertex {
 public:
 	vertex(const int xx, const int yy, const int numV) {
@@ -20,7 +22,9 @@ public:
 			blos = NULL;
 			markLeft = 0;
 			fv = NULL;
+			erase = 0;
 			matchNeighbor = NULL;
+			noUnused = 0;
 		}
 	~vertex() { neighbors.clear(); }
 	int level() {
@@ -65,10 +69,11 @@ public:
 	int markRight;
 	//erase
 	int erase; //0 not erase; 1 erase
-	
+	//noUnused
+	int noUnused;
 	
 	//blossom
-	blossom* blos;
+	blossom *blos;
 	//predecessors
 	std::vector<vertex*> predecessors;
 	//anomalies
@@ -79,8 +84,12 @@ public:
 class blossom {
 public:
 	//TODO: find base and peaks of the blossom
-	blossom(vertex* bs, vertex* pl, vertex *pr)
-		: base(bs), peakL(pl), peakR(pr);
+	blossom(vertex* bs, vertex* pl, vertex * pr) { 
+		base = bs;
+		peakL = pl;
+		peakR = pr;
+	}
+	
 	~blossom();
 	vertex* base;
 	vertex* peakL;
@@ -88,12 +97,13 @@ public:
 	//std::vector<vertex*> VVs;
 };
 
+
 class path {
 public:
 	path() {}
 	~path() {}
-	std::vector<vertex*> pvertices;
-}
+	std::deque<vertex*> pvertices;
+};
 
 class edge {
 public:
